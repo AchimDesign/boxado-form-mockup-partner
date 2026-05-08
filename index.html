@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boxado — Formularz zgłoszeniowy (wariant KSeF)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #E73F19;
+    --orange-soft: #FEE9E1;
+    --orange-hover: #C7340F;
+    --bg: #FAFAFA;
+    --card: #FFFFFF;
+    --border: #E8E8E8;
+    --border-strong: #D4D4D4;
+    --text: #1A1A1A;
+    --text-muted: #6B6B6B;
+    --text-subtle: #9A9A9A;
+    --green: #16A34A;
+    --amber: #F59E0B;
+    --red: #DC2626;
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: 'Plus Jakarta Sans', -apple-system, system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    font-size: 15px;
+  }
+
+  /* Topbar imitating Boxado app shell */
+  .topbar {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 18px;
+  }
+  .logo-mark {
+    width: 32px; height: 32px;
+    background: var(--orange);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 18px;
+  }
+  .logo-mark::after { content: "🐿"; filter: grayscale(1) brightness(10); }
+  .logo-sub { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+  .account-btn {
+    background: var(--orange-soft);
+    color: var(--orange);
+    border: none;
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 14px;
+    font-family: inherit;
+    cursor: pointer;
+  }
+
+  /* Layout */
+  .layout {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 28px;
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 28px;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+    height: fit-content;
+  }
+  .nav-section { margin-bottom: 18px; }
+  .nav-label {
+    font-size: 11px;
+    color: var(--text-subtle);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    padding: 0 10px;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .nav-item.active {
+    background: var(--orange-soft);
+    color: var(--orange);
+    position: relative;
+  }
+  .nav-item.active::before {
+    content: "";
+    position: absolute;
+    right: -18px;
+    top: 6px; bottom: 6px;
+    width: 3px;
+    background: var(--orange);
+    border-radius: 2px;
+  }
+
+  /* Main */
+  .main { background: transparent; min-width: 0; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+    max-width: 760px;
+  }
+  h1 {
+    font-size: 22px;
+    margin: 0 0 6px;
+    font-weight: 700;
+  }
+  .subtitle {
+    color: var(--text-muted);
+    margin: 0 0 28px;
+    font-size: 14.5px;
+  }
+
+  /* Form */
+  .field { margin-bottom: 22px; }
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 22px;
+  }
+  .field-row .field { margin-bottom: 0; }
+  label {
+    display: block;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+  .req { color: var(--orange); margin-left: 2px; }
+  .hint {
+    color: var(--text-subtle);
+    font-size: 12.5px;
+    margin-top: 5px;
+  }
+
+  input[type="text"], input[type="date"], input[type="time"], input[type="email"], input[type="tel"], textarea, select {
+    width: 100%;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    padding: 11px 13px;
+    font-family: inherit;
+    font-size: 14.5px;
+    background: white;
+    color: var(--text);
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--orange);
+    box-shadow: 0 0 0 3px rgba(242, 82, 29, 0.12);
+  }
+  textarea { resize: vertical; min-height: 100px; }
+  .char-count {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 12px;
+    color: var(--text-subtle);
+  }
+  #titleField { position: relative; }
+  #descField { position: relative; }
+  .desc-count {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 12px;
+    color: var(--text-subtle);
+  }
+
+  select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' stroke='%236B6B6B' stroke-width='1.5' fill='none' stroke-linecap='round'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+  }
+
+  /* Urgency radios */
+  .urgency-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .urgency-card {
+    border: 1.5px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    cursor: pointer;
+    background: white;
+    transition: all 0.15s;
+    position: relative;
+  }
+  .urgency-card input { position: absolute; opacity: 0; pointer-events: none; }
+  .urgency-card:hover { border-color: var(--text-muted); }
+  .urgency-card.selected {
+    border-color: var(--orange);
+    background: var(--orange-soft);
+  }
+  .urgency-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 8px;
+  }
+  .urgency-card[data-level="high"] .urgency-dot { background: var(--red); }
+  .urgency-card[data-level="med"] .urgency-dot { background: var(--amber); }
+  .urgency-card[data-level="low"] .urgency-dot { background: var(--green); }
+  .urgency-title { font-weight: 600; font-size: 14px; }
+  .urgency-desc { font-size: 12.5px; color: var(--text-muted); margin-top: 3px; }
+
+  /* Dynamic section */
+  .dynamic-section {
+    background: #FAFAFA;
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius-sm);
+    padding: 20px;
+    margin-bottom: 22px;
+    animation: slideIn 0.25s ease-out;
+  }
+  .plain-section {
+    margin-bottom: 22px;
+    animation: slideIn 0.25s ease-out;
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .dynamic-section > *:last-child,
+  .dynamic-section .field:last-child { margin-bottom: 0; }
+  .plain-section > *:last-child,
+  .plain-section .field:last-child { margin-bottom: 0; }
+  .section-title {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  /* File upload */
+  .file-drop {
+    border: 1.5px dashed var(--border-strong);
+    border-radius: var(--radius-sm);
+    padding: 20px;
+    text-align: center;
+    background: white;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .file-drop:hover {
+    border-color: var(--orange);
+    background: var(--orange-soft);
+  }
+  .file-drop-icon {
+    font-size: 22px;
+    margin-bottom: 6px;
+    opacity: 0.5;
+  }
+  .file-drop-text { font-size: 13.5px; color: var(--text-muted); }
+  .file-drop-text strong { color: var(--orange); }
+
+  /* Checkbox */
+  .check-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px;
+    background: #FAFAFA;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+  }
+  .check-row input { margin-top: 2px; accent-color: var(--orange); }
+  .check-row-text { font-size: 14px; }
+  .check-row-hint { font-size: 12.5px; color: var(--text-muted); margin-top: 2px; }
+
+  /* Submit */
+  .actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: 8px;
+  }
+  .btn-primary {
+    background: var(--orange);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 14.5px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-primary:hover { background: var(--orange-hover); }
+
+  /* Diagnostic data notice — accordion */
+  .diagnostic-notice {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .diag-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 4px 0;
+    font-family: inherit;
+    font-size: 12.5px;
+    color: var(--text-muted);
+    text-align: left;
+    cursor: pointer;
+    line-height: 1.5;
+  }
+  .diag-header:hover { color: var(--text); }
+  .diag-icon-info {
+    flex-shrink: 0;
+    color: var(--text-subtle);
+  }
+  .diag-text {
+    flex: 1;
+  }
+  .diag-chevron {
+    flex-shrink: 0;
+    color: var(--text-subtle);
+    transition: transform 0.2s ease;
+  }
+  .diag-header[aria-expanded="true"] .diag-chevron {
+    transform: rotate(180deg);
+  }
+  .diag-body {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.25s ease;
+  }
+  .diag-body.open { max-height: 400px; }
+  .diag-body-inner {
+    padding: 12px 0 4px 24px;
+    font-size: 12.5px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+  .diag-body-inner ul {
+    margin: 6px 0;
+    padding-left: 20px;
+  }
+  .diag-body-inner li { margin-bottom: 2px; }
+
+  /* Annotations panel */
+  .annotation-toggle {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--text);
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    z-index: 100;
+  }
+  .annotation-toggle:hover { background: #000; }
+
+  .annotations {
+    position: fixed;
+    top: 0; right: 0;
+    height: 100vh;
+    width: 380px;
+    background: white;
+    border-left: 1px solid var(--border);
+    padding: 24px;
+    overflow-y: auto;
+    transform: translateX(100%);
+    transition: transform 0.25s ease-out;
+    z-index: 99;
+    box-shadow: -10px 0 30px rgba(0,0,0,0.06);
+  }
+  .annotations.open { transform: translateX(0); }
+  .annotations h3 {
+    margin: 0 0 6px;
+    font-size: 16px;
+  }
+  .annotations p.lead {
+    color: var(--text-muted);
+    font-size: 13px;
+    margin: 0 0 20px;
+  }
+  .anno-item {
+    border-left: 2px solid var(--orange);
+    padding: 4px 0 4px 12px;
+    margin-bottom: 14px;
+  }
+  .anno-item strong {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 3px;
+  }
+  .anno-item span {
+    font-size: 12.5px;
+    color: var(--text-muted);
+    line-height: 1.45;
+  }
+  .anno-close {
+    position: absolute;
+    top: 16px; right: 16px;
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    color: var(--text-muted);
+  }
+
+  /* Bg context info */
+  .bg-context {
+    background: linear-gradient(0deg, #FFF7F2, #FFFFFF);
+    border: 1px solid var(--orange-soft);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    margin-bottom: 22px;
+    font-size: 13px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .bg-context-icon {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--orange-soft);
+    color: var(--orange);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* Reveal-after-category */
+  .rest-of-form {
+    display: none;
+  }
+  .rest-of-form.visible {
+    display: block;
+    animation: fadeIn 0.3s ease-out;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .field-row { grid-template-columns: 1fr; }
+    .urgency-grid { grid-template-columns: 1fr; }
+    .annotations { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">
+    <div class="logo-mark"></div>
+    <div>
+      boxado
+      <div class="logo-sub">Your Self-Storage</div>
+    </div>
+  </div>
+  <button class="account-btn">Moje Konto ▾</button>
+</div>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="nav-section">
+      <div class="nav-label">Ogólne</div>
+      <div class="nav-item">▦ Pulpit</div>
+      <div class="nav-item">⚙ Ustawienia konta</div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Najmy</div>
+      <div class="nav-item">▣ Aktywne najmy</div>
+      <div class="nav-item">▣ Historia najmów</div>
+      <div class="nav-item">▣ Przyszłe najmy</div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Rozliczenia</div>
+      <div class="nav-item">⌖ Zaległości</div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Pomoc</div>
+      <div class="nav-item active">🎧 Kontakt</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="card">
+      <h1>Formularz zgłoszeniowy</h1>
+      <p class="subtitle">Pomóż nam rozwiązać Twoją sprawę szybciej — kilka krótkich informacji pomoże nam zrozumieć sytuację i znaleźć rozwiązanie.</p>
+
+      <form id="contactForm" onsubmit="event.preventDefault(); submitForm();">
+
+        <!-- 1. Category -->
+        <div class="field">
+          <label for="category">Kategoria <span class="req">*</span></label>
+          <select id="category" required onchange="renderDynamic()">
+            <option value="" disabled selected>Wybierz kategorię zgłoszenia</option>
+            <option value="tech">Wsparcie techniczne</option>
+            <option value="dane">Zmiana lub usunięcie danych</option>
+            <option value="reklamacja">Reklamacja</option>
+            <option value="propozycja">Propozycja zmian</option>
+            <option value="opinia">Opinia</option>
+            <option value="ksef">KSeF/Fakturownia</option>
+            <option value="inne">Inne</option>
+          </select>
+        </div>
+
+        <!-- Fields below appear after category is selected -->
+        <div id="restOfForm" class="rest-of-form">
+
+        <!-- Dynamic section TOP (before Title) - used by some categories -->
+        <div id="dynamicSectionTop"></div>
+
+        <!-- Title -->
+        <div class="field" id="titleField">
+          <label for="title" id="titleLabel">Tytuł zgłoszenia <span class="req">*</span></label>
+          <input type="text" id="title" maxlength="120" required
+                 placeholder="np. Nie mogę przedłużyć najmu boxa B-12"
+                 oninput="updateCount()">
+          <div class="char-count"><span id="titleCount">0</span> / 120</div>
+        </div>
+
+        <!-- Description -->
+        <div class="field" id="descField">
+          <label for="description" id="descLabel">Opis <span class="req">*</span></label>
+          <textarea id="description" required rows="5" maxlength="5000"
+                    placeholder="Opisz szczegóły swojej sprawy..."
+                    oninput="updateDescCount()"></textarea>
+          <div class="desc-count" id="descCountWrap">
+            <span id="descCount">0</span> / 5000
+          </div>
+          <div class="hint" id="descHint">Im więcej kontekstu, tym szybciej rozwiążemy sprawę.</div>
+        </div>
+
+        <!-- Dynamic section MIDDLE (between Description and Attachment) - used by plac/box -->
+        <div id="dynamicSectionMiddle"></div>
+
+        <!-- Attachment -->
+        <div class="field" id="attachmentField">
+          <label>Załącznik</label>
+          <div class="file-drop" onclick="document.getElementById('file').click()">
+            <div class="file-drop-icon">📎</div>
+            <div class="file-drop-text">
+              <strong>Dodaj zrzut ekranu</strong> lub przeciągnij plik tutaj
+            </div>
+            <div class="hint">Akceptujemy tylko .jpg, .png i .heic, maks. rozmiar 5 MB</div>
+          </div>
+          <input type="file" id="file" hidden accept=".jpg,.jpeg,.png,.heic">
+        </div>
+
+        <!-- Urgency -->
+        <div class="field" id="urgencyField">
+          <label>Pilność <span class="req">*</span></label>
+          <div class="urgency-grid">
+            <label class="urgency-card" data-level="low" onclick="selectUrgency(this, 'low')">
+              <input type="radio" name="urgency" value="low">
+              <div class="urgency-title"><span class="urgency-dot"></span>Sugestia / pytanie</div>
+              <div class="urgency-desc">Nie wpływa na bieżące korzystanie z usługi</div>
+            </label>
+            <label class="urgency-card" data-level="med" onclick="selectUrgency(this, 'med')">
+              <input type="radio" name="urgency" value="med">
+              <div class="urgency-title"><span class="urgency-dot"></span>Utrudnia</div>
+              <div class="urgency-desc">Działa, ale z problemami</div>
+            </label>
+            <label class="urgency-card" data-level="high" onclick="selectUrgency(this, 'high')">
+              <input type="radio" name="urgency" value="high">
+              <div class="urgency-title"><span class="urgency-dot"></span>Blokuje mnie</div>
+              <div class="urgency-desc">Nie mogę korzystać z usługi</div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Dynamic section BOTTOM (after Urgency) - used by tech category -->
+        <div id="dynamicSectionBottom"></div>
+
+        <!-- Phone consent -->
+        <div class="field" id="phoneField">
+          <label class="check-row">
+            <input type="checkbox" id="phoneConsent" onchange="togglePhone()">
+            <div>
+              <div class="check-row-text">Zgadzam się na kontakt telefoniczny w sprawie tego zgłoszenia</div>
+              <div class="check-row-hint">Czasem jeden krótki telefon rozwiąże sprawę szybciej niż wymiana maili.</div>
+            </div>
+          </label>
+          <div id="phoneWrap" style="display:none; margin-top: 10px;">
+            <input type="text" id="phone" placeholder="Twój numer telefonu">
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="field">
+          <label>Adres e-mail, pod którym się z Tobą skontaktujemy</label>
+          <input type="text" value="kubieniec92@gmail.com" disabled style="background: #F3F3F3; color: var(--text-muted);">
+        </div>
+
+        </div><!-- /restOfForm -->
+
+        <div class="actions" id="formActions" style="display:none;">
+          <button type="submit" class="btn-primary">Wyślij zgłoszenie</button>
+        </div>
+
+        <div class="diagnostic-notice" id="diagnosticNotice" style="display:none;">
+          <button type="button" class="diag-header" onclick="toggleDiagnostic()" aria-expanded="false">
+            <svg class="diag-icon-info" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.4"/>
+              <circle cx="8" cy="4.5" r="0.9" fill="currentColor"/>
+              <path d="M8 7v5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            </svg>
+            <span class="diag-text">Zbieramy od Ciebie dodatkowe anonimowe dane, które pomogą nam szybciej odpowiedzieć na Twoje zgłoszenie.</span>
+            <svg class="diag-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <path d="M2.5 4.5l3.5 3.5 3.5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div class="diag-body">
+            <div class="diag-body-inner">
+              Razem ze zgłoszeniem przesyłamy automatycznie:
+              <ul>
+                <li>przeglądarkę i jej wersję</li>
+                <li>system operacyjny</li>
+                <li>typ urządzenia (desktop / mobile)</li>
+                <li>rozdzielczość ekranu i okna przeglądarki</li>
+                <li>język i strefę czasową</li>
+                <li>adres strony, z której wysłałeś zgłoszenie</li>
+                <li>czas wysłania zgłoszenia</li>
+                <li>status zgód (analytics, marketing, functional)</li>
+              </ul>
+              Dane służą wyłącznie do odtworzenia kontekstu Twojego problemu.
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
+
+<button class="annotation-toggle" onclick="toggleAnnotations()">💡 Pokaż uzasadnienia projektowe</button>
+
+<aside class="annotations" id="annoPanel">
+  <button class="anno-close" onclick="toggleAnnotations()">×</button>
+  <h3>Decyzje projektowe</h3>
+  <p class="lead">Dlaczego formularz wygląda właśnie tak.</p>
+
+  <div class="anno-item">
+    <strong>Kategoria jako pierwsza i jedyna na start</strong>
+    <span>Reszta formularza pojawia się dopiero po wyborze kategorii. Mniej pól na ekranie = mniej obciążenia poznawczego.</span>
+  </div>
+  <div class="anno-item">
+    <strong>Pola dopasowane do kategorii</strong>
+    <span>Każda kategoria ma własny zestaw pól, etykiet i placeholderów. User nie widzi pytań, które jego nie dotyczą.</span>
+  </div>
+  <div class="anno-item">
+    <strong>Pilność tylko dla Wsparcia technicznego</strong>
+    <span>Tam, gdzie blokada w aplikacji ma znaczenie operacyjne. W reklamacji, opinii czy zmianie danych pilność nie jest informacją, na którą można reagować.</span>
+  </div>
+  <div class="anno-item">
+    <strong>Tytuł ukryty dla „Zmiana lub usunięcie danych"</strong>
+    <span>Rodzaj zmiany (dropdown) jest wystarczającym tytułem ticketu. Drugie pole tylko by powtarzało tę samą informację.</span>
+  </div>
+  <div class="anno-item">
+    <strong>Etykieta opisu dopasowana kontekstowo</strong>
+    <span>„Co się stało" przy zgłoszeniu placu/boxa, „Wyraź swoją opinię" przy opinii, „Napisz jakie działania mamy podjąć" przy zmianie danych. User wie, czego od niego oczekujemy.</span>
+  </div>
+  <div class="anno-item">
+    <strong>Email zablokowany</strong>
+    <span>User jest zalogowany — nie pytamy, ale pokazujemy wartość, by mógł ją zweryfikować.</span>
+  </div>
+  <div class="anno-item">
+    <strong>Informacja o czasie odpowiedzi</strong>
+    <span>„Odpowiadamy w 24h roboczych" obok przycisku redukuje liczbę dublujących się zgłoszeń od niecierpliwych userów.</span>
+  </div>
+</aside>
+
+<script>
+  // Per-category configuration.
+  // - show: which optional fields are visible
+  // - title: { label, placeholder } for the title input (or null to hide it)
+  // - desc: { label, placeholder, hint } — hint=null hides the small grey hint under textarea
+  // - section: { title, fields } — extra inline fields. Pass null to hide whole section.
+  // - sectionStyle: 'card' (dashed bg) or 'plain' (no bg, no header)
+  const dynamicConfig = {
+    tech: {
+      show: { urgency: true, attachment: true, phone: false, diagnostic: true },
+      title: {
+        label: "Tytuł zgłoszenia",
+        placeholder: "np. Nie mogę przedłużyć najmu boxa B-12"
+      },
+      desc: {
+        label: "Opisz swoją sytuację",
+        placeholder: "Opisz krok po kroku, co się wydarzyło oraz jaki efekt powinien wystąpić.",
+        hint: null
+      },
+      section: {
+        slot: 'bottom',
+        sectionStyle: 'card',
+        title: "Pomóż nam zrozumieć problem",
+        fields: `
+          <div class="field">
+            <label>Co próbowałeś zrobić?</label>
+            <input type="text" placeholder="np. Przedłużyć najem boxa o miesiąc">
+          </div>
+          <div class="field">
+            <label>Co się stało zamiast tego?</label>
+            <input type="text" placeholder="np. Pojawił się komunikat o błędzie">
+          </div>
+          <div class="field">
+            <label>Gdzie na platformie wystąpił problem</label>
+            <input type="text" placeholder="np. Zakładka wynajmy">
+          </div>
+        `
+      }
+    },
+    dane: {
+      show: { urgency: false, attachment: true, phone: false, diagnostic: false },
+      title: null,
+      desc: {
+        label: "Napisz jakie działania mamy podjąć",
+        placeholder: "Podaj nowe wartości lub szczegóły żądania. Przy usunięciu konta opisz powód (pomaga nam się rozwijać).",
+        hint: null
+      },
+      section: null
+    },
+    reklamacja: {
+      show: { urgency: false, attachment: true, phone: false, diagnostic: false },
+      title: {
+        label: "Tytuł zgłoszenia",
+        placeholder: "np. Chcę zareklamować usługę najmu boxa"
+      },
+      desc: {
+        label: "Opisz co się stało",
+        placeholder: "Opisz sytuację oraz to czego oczekujesz od nas.",
+        hint: null
+      },
+      section: null
+    },
+    propozycja: {
+      show: { urgency: false, attachment: true, phone: false, diagnostic: false },
+      title: {
+        label: "Tytuł propozycji",
+        placeholder: "np. Dodanie nowej funkcjonalności do aplikacji"
+      },
+      desc: {
+        label: "Opis",
+        placeholder: "Co chciałbyś zmienić lub dodać? Im konkretniej, tym lepiej dla nas.",
+        hint: null
+      },
+      section: null
+    },
+    opinia: {
+      show: { urgency: false, attachment: true, phone: false, diagnostic: false },
+      title: {
+        label: "Czego dotyczy opinia",
+        placeholder: "np. Korzystanie z placu Boxado"
+      },
+      desc: {
+        label: "Wyraź swoją opinię",
+        placeholder: "Co działa dobrze, a co można poprawić?",
+        hint: null
+      },
+      section: null
+    },
+    ksef: {
+      show: { urgency: false, attachment: true, phone: false, diagnostic: false },
+      title: {
+        label: "Czego dotyczy zgłoszenie",
+        placeholder: "np. Zerwane połączenie z Fakturownią"
+      },
+      desc: {
+        label: "Opis",
+        placeholder: "Opisz swoją sprawę — postaramy się szybko skierować ją do właściwej osoby.",
+        hint: null
+      },
+      section: null
+    },
+    inne: {
+      show: { urgency: false, attachment: true, phone: false, diagnostic: false },
+      title: {
+        label: "Czego dotyczy zgłoszenie",
+        placeholder: "np. Propozycja współpracy"
+      },
+      desc: {
+        label: "Opis",
+        placeholder: "Opisz swoją sprawę — postaramy się szybko skierować ją do właściwej osoby.",
+        hint: null
+      },
+      section: null
+    }
+  };
+
+  function renderDynamic() {
+    const cat = document.getElementById('category').value;
+    const cfg = dynamicConfig[cat];
+    const rest = document.getElementById('restOfForm');
+    const actions = document.getElementById('formActions');
+    const notice = document.getElementById('diagnosticNotice');
+
+    // Reveal the rest of the form once a category is chosen
+    if (cat && cfg) {
+      rest.classList.add('visible');
+      actions.style.display = 'flex';
+      notice.style.display = cfg.show.diagnostic ? 'block' : 'none';
+    } else {
+      rest.classList.remove('visible');
+      actions.style.display = 'none';
+      notice.style.display = 'none';
+      return;
+    }
+
+    // Title field
+    const titleField = document.getElementById('titleField');
+    if (cfg.title) {
+      titleField.style.display = '';
+      document.getElementById('titleLabel').innerHTML =
+        `${cfg.title.label} <span class="req">*</span>`;
+      const titleInput = document.getElementById('title');
+      titleInput.placeholder = cfg.title.placeholder;
+    } else {
+      titleField.style.display = 'none';
+    }
+
+    // Description field
+    document.getElementById('descLabel').innerHTML =
+      `${cfg.desc.label} <span class="req">*</span>`;
+    const descInput = document.getElementById('description');
+    descInput.placeholder = cfg.desc.placeholder;
+    const descHint = document.getElementById('descHint');
+    if (cfg.desc.hint) {
+      descHint.textContent = cfg.desc.hint;
+      descHint.style.display = '';
+    } else {
+      descHint.style.display = 'none';
+    }
+
+    // Description character counter — always visible, just refresh value
+    updateDescCount();
+
+    // Optional fields visibility
+    document.getElementById('urgencyField').style.display =
+      cfg.show.urgency ? '' : 'none';
+    document.getElementById('attachmentField').style.display =
+      cfg.show.attachment ? '' : 'none';
+    document.getElementById('phoneField').style.display =
+      cfg.show.phone ? '' : 'none';
+
+    // Dynamic inline section — render in TOP, MIDDLE or BOTTOM slot
+    const topWrap = document.getElementById('dynamicSectionTop');
+    const middleWrap = document.getElementById('dynamicSectionMiddle');
+    const bottomWrap = document.getElementById('dynamicSectionBottom');
+    topWrap.innerHTML = '';
+    middleWrap.innerHTML = '';
+    bottomWrap.innerHTML = '';
+    if (cfg.section) {
+      const styleClass = cfg.section.sectionStyle === 'plain' ? 'plain-section' : 'dynamic-section';
+      const html = `
+        <div class="${styleClass}">
+          ${cfg.section.title ? `<div class="section-title">${cfg.section.title}</div>` : ''}
+          ${cfg.section.fields}
+        </div>
+      `;
+      let slot = topWrap;
+      if (cfg.section.slot === 'bottom') slot = bottomWrap;
+      else if (cfg.section.slot === 'middle') slot = middleWrap;
+      slot.innerHTML = html;
+    }
+  }
+
+  function selectUrgency(el, level) {
+    document.querySelectorAll('.urgency-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    el.querySelector('input').checked = true;
+  }
+
+  function togglePhone() {
+    const cb = document.getElementById('phoneConsent');
+    document.getElementById('phoneWrap').style.display = cb.checked ? 'block' : 'none';
+  }
+
+  function updateCount() {
+    const v = document.getElementById('title').value.length;
+    document.getElementById('titleCount').textContent = v;
+  }
+
+  function updateDescCount() {
+    const v = document.getElementById('description').value.length;
+    document.getElementById('descCount').textContent = v;
+  }
+
+  function submitForm() {
+    alert('Mockup — w produkcji tu nastąpiłoby wysłanie zgłoszenia + nadanie numeru ticketu.');
+  }
+
+  function toggleAnnotations() {
+    document.getElementById('annoPanel').classList.toggle('open');
+  }
+
+  function toggleDiagnostic() {
+    const btn = document.querySelector('.diag-header');
+    const body = document.querySelector('.diag-body');
+    const isOpen = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', String(!isOpen));
+    body.classList.toggle('open');
+  }
+</script>
+</body>
+</html>
