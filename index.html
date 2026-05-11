@@ -6,7 +6,7 @@
 <title>Boxado — Formularz zgłoszeniowy (wariant KSeF)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --orange: #E73F19;
@@ -30,113 +30,253 @@
 
   body {
     margin: 0;
-    font-family: 'Plus Jakarta Sans', -apple-system, system-ui, sans-serif;
-    background: var(--bg);
+    font-family: 'Poppins', -apple-system, system-ui, sans-serif;
+    background: var(--card);
     color: var(--text);
     line-height: 1.5;
-    font-size: 15px;
+    font-size: 14px;
   }
 
   /* Topbar imitating Boxado app shell */
   .topbar {
-    background: var(--card);
     border-bottom: 1px solid var(--border);
-    padding: 14px 32px;
+    display: flex;
+    align-items: stretch;
+    height: 72px;
+    position: sticky;
+    top: 0;
+    z-index: 30;
+  }
+  .topbar-logo-zone {
+    width: 216px;
+    flex-shrink: 0;
+    background: #FAFAFA;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    padding: 0 16px;
+    border-right: 1px solid var(--border);
+  }
+  .topbar-content {
+    flex: 1;
+    background: #FAFAFA;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
   }
   .logo {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+  }
+  .logo svg {
+    height: 40px;
+    width: auto;
+  }
+  .page-title {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text);
+  }
+  .topbar-spacer { flex: 1; }
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .badges-group {
     display: flex;
     align-items: center;
     gap: 10px;
-    font-weight: 700;
-    font-size: 18px;
+    padding-right: 16px;
+    border-right: 1px solid var(--border);
   }
-  .logo-mark {
-    width: 32px; height: 32px;
-    background: var(--orange);
-    border-radius: 8px;
+  .integration-badge {
     display: flex;
     align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 18px;
+    gap: 10px;
+    padding: 12px;
+    height: 50px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1.5;
   }
-  .logo-mark::after { content: "🐿"; filter: grayscale(1) brightness(10); }
-  .logo-sub { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+  .integration-badge .dot {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: #D0F3E4;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .integration-badge .dot::after {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    background: #45B988;
+    border-radius: 50%;
+  }
+  .integration-badge .label { color: var(--text-muted); }
+  .integration-badge .status { color: var(--text); font-weight: 500; }
+  .integration-badge .pz-logo {
+    height: 18px;
+    width: auto;
+  }
   .account-btn {
     background: var(--orange-soft);
     color: var(--orange);
     border: none;
-    padding: 8px 16px;
-    border-radius: var(--radius-sm);
-    font-weight: 600;
+    padding: 0 12px;
+    height: 40px;
+    border-radius: 6px;
+    font-weight: 500;
     font-size: 14px;
     font-family: inherit;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
 
   /* Layout */
   .layout {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 28px;
     display: grid;
-    grid-template-columns: 240px 1fr;
-    gap: 28px;
+    grid-template-columns: 216px 1fr;
+    min-height: calc(100vh - 72px);
   }
 
   /* Sidebar */
   .sidebar {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 18px;
-    height: fit-content;
+    background: #FAFAFA;
+    padding: 24px 12px 16px;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
   }
-  .nav-section { margin-bottom: 18px; }
+  .sidebar-nav {
+    flex: 1;
+    overflow-y: auto;
+  }
+  .sidebar-footer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 4px 0;
+    margin-top: 12px;
+  }
+  .sidebar-footer-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--text);
+    color: white;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    flex-shrink: 0;
+  }
+  .sidebar-footer-btn:last-child {
+    background: transparent;
+    color: var(--text-muted);
+    border-radius: 4px;
+  }
+  .sidebar-footer-btn:last-child:hover {
+    background: rgba(0,0,0,0.05);
+  }
+  .nav-section { margin-bottom: 20px; }
   .nav-label {
-    font-size: 11px;
+    font-size: 12px;
     color: var(--text-subtle);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    font-weight: 500;
     margin-bottom: 8px;
-    padding: 0 10px;
+    padding: 0 12px;
   }
   .nav-item {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 8px 10px;
-    border-radius: var(--radius-sm);
-    color: var(--text-muted);
+    padding: 8px 12px;
+    border-radius: 6px;
+    color: var(--text);
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 400;
     cursor: pointer;
+    margin-bottom: 2px;
+  }
+  .nav-item svg {
+    flex-shrink: 0;
+    color: var(--text-muted);
+  }
+  .nav-item:hover {
+    background: rgba(0, 0, 0, 0.04);
   }
   .nav-item.active {
     background: var(--orange-soft);
     color: var(--orange);
+    font-weight: 500;
     position: relative;
   }
+  .nav-item.active svg { color: var(--orange); }
   .nav-item.active::before {
     content: "";
     position: absolute;
-    right: -18px;
+    left: 0;
     top: 6px; bottom: 6px;
     width: 3px;
     background: var(--orange);
-    border-radius: 2px;
+    border-radius: 0 2px 2px 0;
+  }
+
+  /* Place chips (partner sidebar - individual locations) */
+  .place-chip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 12px;
+    cursor: pointer;
+    border-radius: 6px;
+    margin-bottom: 2px;
+  }
+  .place-chip:hover { background: rgba(0,0,0,0.04); }
+  .place-chip-avatar {
+    width: 24px; height: 24px;
+    border-radius: 4px;
+    background: #E8E8E8;
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .place-chip-body { min-width: 0; }
+  .place-chip-name {
+    font-size: 13px;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 140px;
+    font-weight: 500;
+  }
+  .place-chip-city {
+    font-size: 11px;
+    color: var(--text-muted);
   }
 
   /* Main */
-  .main { background: transparent; min-width: 0; }
+  .main { background: transparent; min-width: 0; padding: 24px 32px; }
   .card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 32px;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0;
     max-width: 760px;
   }
   h1 {
@@ -486,6 +626,27 @@
     flex-shrink: 0;
   }
 
+  /* Category disclaimer */
+  .category-disclaimer {
+    margin-bottom: 22px;
+    padding: 12px 14px;
+    background: #FFF7F3;
+    border-left: 3px solid var(--orange);
+    border-radius: 4px;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.5;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    animation: fadeIn 0.25s ease-out;
+  }
+  .category-disclaimer svg {
+    flex-shrink: 0;
+    color: var(--orange);
+    margin-top: 2px;
+  }
+
   /* Reveal-after-category */
   .rest-of-form {
     display: none;
@@ -511,36 +672,169 @@
 <body>
 
 <div class="topbar">
-  <div class="logo">
-    <div class="logo-mark"></div>
-    <div>
-      boxado
-      <div class="logo-sub">Your Self-Storage</div>
+  <div class="topbar-logo-zone">
+    <div class="logo">
+      <svg width="490" height="148" viewBox="0 0 490 148" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M187.79 102.551H189.545L196.232 115.502L202.88 102.551H204.636L197.019 116.95V126.736H195.464V116.95L187.78 102.551H187.79Z" fill="#1D1D1B"/>
+<path d="M217.28 127.014C212.042 127.014 208.08 123.359 208.08 117.363C208.08 111.367 212.109 107.779 217.347 107.779C222.585 107.779 226.547 111.396 226.547 117.363C226.547 123.33 222.517 127.014 217.28 127.014ZM217.28 125.632C221.203 125.632 225.002 123.052 225.002 117.363C225.002 111.674 221.242 109.132 217.318 109.132C213.394 109.132 209.672 111.712 209.672 117.363C209.672 123.013 213.356 125.632 217.289 125.632H217.28Z" fill="#1D1D1B"/>
+<path d="M247.777 126.736H246.223V122.668C245.158 125.594 242.433 127.043 239.363 127.043C235.19 127.043 231.785 124.558 231.785 118.907V108.019H233.3V118.802C233.3 123.388 235.814 125.69 239.574 125.69C243.335 125.69 246.223 123.244 246.223 118.044V108.019H247.777V126.726V126.736Z" fill="#1D1D1B"/>
+<path d="M255.672 126.736H254.118V108.029H255.672V111.885C256.603 109.161 258.915 107.645 262.599 107.645V109.266H262.081C258.876 109.266 255.672 110.849 255.672 115.953V126.736Z" fill="#1D1D1B"/>
+<path d="M284.27 126.975C279.415 126.975 276.585 124.145 276.307 120.778H277.928C278.207 122.774 279.722 125.632 284.27 125.632C287.925 125.632 290.16 123.426 290.16 120.673C290.16 112.854 276.652 117.747 276.652 108.547C276.652 105.103 279.55 102.311 284.058 102.311C288.567 102.311 291.09 104.968 291.57 107.789H289.92C289.575 106.1 287.819 103.654 284.03 103.654C280.864 103.616 278.207 105.448 278.207 108.508C278.207 116.327 291.714 111.54 291.714 120.634C291.714 123.733 289.229 126.975 284.27 126.975Z" fill="#1D1D1B"/>
+<path d="M305.193 127.014C299.955 127.014 296.098 123.359 296.098 117.363C296.098 111.367 299.887 107.779 305.193 107.779C310.814 107.779 313.913 111.78 313.913 116.116C313.913 116.941 313.913 117.353 313.846 117.977H297.681C297.815 123.176 301.336 125.661 305.193 125.661C309.049 125.661 311.534 123.694 312.157 120.596H313.779C313.059 124.28 309.989 127.004 305.202 127.004L305.193 127.014ZM297.681 116.711H312.359C312.599 111.511 308.944 109.093 305.154 109.093C301.365 109.093 297.854 111.54 297.681 116.711Z" fill="#1D1D1B"/>
+<path d="M319.285 101.237H320.839V126.736H319.285V101.237Z" fill="#1D1D1B"/>
+<path d="M327.938 109.4H325.108V108.019H327.938V106.705C327.938 102.877 329.665 100.92 334.28 100.92V102.301C330.625 102.301 329.493 103.683 329.493 106.714V108.029H334.347V109.41H329.493V126.745H327.938V109.41V109.4Z" fill="#1D1D1B"/>
+<path d="M336.102 113.123H349.063V114.466H336.102V113.123Z" fill="#1D1D1B"/>
+<path d="M363.29 126.975C358.435 126.975 355.605 124.145 355.327 120.778H356.948C357.227 122.774 358.742 125.632 363.29 125.632C366.945 125.632 369.18 123.426 369.18 120.673C369.18 112.854 355.672 117.747 355.672 108.547C355.672 105.103 358.57 102.311 363.079 102.311C367.587 102.311 370.11 104.968 370.59 107.789H368.94C368.595 106.1 366.839 103.654 363.05 103.654C359.884 103.616 357.227 105.448 357.227 108.508C357.227 116.327 370.734 111.54 370.734 120.634C370.734 123.733 368.249 126.975 363.29 126.975Z" fill="#1D1D1B"/>
+<path d="M376.835 109.372H374.005V108.029H376.835V103.27H378.39V108.029H383.934V109.372H378.39V121.747C378.39 124.577 379.32 125.364 381.834 125.364H383.934V126.745H381.594C378.39 126.745 376.835 125.431 376.835 121.747V109.372Z" fill="#1D1D1B"/>
+<path d="M396.962 127.014C391.724 127.014 387.762 123.359 387.762 117.363C387.762 111.367 391.791 107.779 397.029 107.779C402.267 107.779 406.229 111.396 406.229 117.363C406.229 123.33 402.2 127.014 396.962 127.014ZM396.962 125.632C400.886 125.632 404.685 123.052 404.685 117.363C404.685 111.674 400.924 109.132 397.001 109.132C393.077 109.132 389.355 111.712 389.355 117.363C389.355 123.013 393.038 125.632 396.972 125.632H396.962Z" fill="#1D1D1B"/>
+<path d="M413.184 126.736H411.63V108.029H413.184V111.885C414.115 109.161 416.426 107.645 420.11 107.645V109.266H419.592C416.388 109.266 413.184 110.849 413.184 115.953V126.736Z" fill="#1D1D1B"/>
+<path d="M432.448 107.789C436.582 107.789 439.336 110.101 440.372 112.921V108.029H441.926V126.736H440.372V121.805C439.336 124.663 436.544 127.004 432.448 127.004C427.21 127.004 423.42 123.244 423.42 117.353C423.42 111.463 427.21 107.77 432.448 107.77V107.789ZM432.659 109.132C428.14 109.132 425.013 112.202 425.013 117.363C425.013 122.524 428.15 125.632 432.659 125.632C437.168 125.632 440.381 122.428 440.381 117.363C440.381 112.298 437.043 109.132 432.659 109.132Z" fill="#1D1D1B"/>
+<path d="M456.335 107.789C460.431 107.789 463.223 110.062 464.259 112.892V108.038H465.813V127.33C465.813 132.635 462.024 135.907 457.304 135.907C452.584 135.907 449.38 133.422 448.449 129.671H450.003C450.896 132.568 453.419 134.564 457.314 134.564C461.208 134.564 464.269 131.839 464.269 127.33V121.853C463.233 124.683 460.441 127.023 456.345 127.023C451.107 127.023 447.317 123.263 447.317 117.373C447.317 111.482 451.107 107.789 456.345 107.789H456.335ZM456.537 109.132C452.018 109.132 448.891 112.202 448.891 117.363C448.891 122.524 452.028 125.632 456.537 125.632C461.045 125.632 464.259 122.428 464.259 117.363C464.259 112.298 460.921 109.132 456.537 109.132Z" fill="#1D1D1B"/>
+<path d="M480.28 127.014C475.042 127.014 471.186 123.359 471.186 117.363C471.186 111.367 474.975 107.779 480.28 107.779C485.902 107.779 489 111.78 489 116.116C489 116.941 489 117.353 488.933 117.977H472.768C472.903 123.176 476.423 125.661 480.28 125.661C484.136 125.661 486.621 123.694 487.245 120.596H488.866C488.146 124.28 485.077 127.004 480.29 127.004L480.28 127.014ZM472.768 116.711H487.446C487.686 111.511 484.031 109.093 480.242 109.093C476.452 109.093 472.941 111.54 472.768 116.711Z" fill="#1D1D1B"/>
+<path d="M102.68 0.00999451H28.99C22.87 0.00999451 17.8 0.860005 13.68 2.63H13.66C4.33 6.67 0 15.46 0 30.06V101.44C0 122.48 8.97001 131.5 28.99 131.5H102.68C122.87 131.5 131.5 122.48 131.5 101.44V30.06C131.5 9.02001 122.87 0 102.68 0V0.00999451Z" fill="#1D1D1B"/>
+<path d="M118.98 15.68H45.1203C38.9903 15.68 33.9003 16.54 29.7803 18.31H29.7603C20.4103 22.35 16.0703 31.17 16.0703 45.81V117.36C16.0703 138.45 25.0703 147.49 45.1303 147.49H118.99C139.23 147.49 147.88 138.45 147.88 117.36V45.81C147.88 24.72 139.23 15.68 118.99 15.68H118.98Z" fill="#E73F19"/>
+<path d="M131.24 71.02C129.57 67.24 127.3 63.76 123.82 61.33C122.46 60.42 120.94 59.82 119.28 59.36C118.38 59.06 118.07 58.6 118.07 57.69C118.07 54.97 116.71 52.7 114.75 50.58C113.54 53 113.08 55.42 113.08 58C112.48 55.12 110.51 52.85 109.3 50.43C107.06 52.56 106.17 55.68 106.86 58.76C106.86 58.81 106.88 58.87 106.9 58.93C106.9 58.93 106.9 58.93 106.9 58.94C107.58 61.58 106.36 63.34 106.36 63.34C105.06 65.16 104.25 67.11 103.56 69.19C103.26 69.94 102.95 70.86 102.8 71.61C102.71 71.93 102.62 72.25 102.52 72.55C100.42 77.11 96.99 80.01 91.65 81.13C88.89 81.68 86.38 82.54 84.11 83.72C76.17 86.83 70.52 94.71 70.52 103.94C70.52 112.28 75.12 119.51 81.86 123.13C82.47 123.67 83.65 124.17 85.25 124.58C87.27 125.24 89.41 125.59 91.64 125.59C91.65 125.59 91.67 125.59 91.68 125.59C93.55 125.75 95.6 125.84 97.74 125.84C106.77 125.84 114.09 124.25 114.09 122.29C114.09 121.03 111.08 119.93 106.53 119.3C110.38 115.38 112.76 109.95 112.76 103.95C112.76 102.52 112.62 101.13 112.37 99.78C116.07 99.61 119.32 98.38 122.71 96.99C125.04 96.06 125.2 96.06 126.6 98.39C127.22 99.32 127.84 99.95 128.93 99.63C130.02 99.32 130.33 98.54 130.33 97.45C130.33 94.96 128.78 92.79 126.13 91.85C124.89 91.39 123.49 91.23 122.09 91.08C120.44 90.9 119.06 90.59 117.9 90.11C117.74 90.03 116.16 89.06 116.36 84.21C116.41 83.69 116.47 83.17 116.55 82.65C116.7 81.59 117.31 81.59 118.06 81.59C120.94 81.44 123.81 80.84 126.54 79.62C127.44 79.17 128.35 78.71 129.26 78.11C130.62 77.35 131.53 76.14 132.44 74.78C133.5 73.11 131.83 72.06 131.23 71L131.24 71.02Z" fill="white"/>
+<path d="M70.3498 91.4C72.2198 88.6 74.2398 85.96 76.4098 83.47C78.9898 80.35 81.4498 77.1 82.8598 73.22C89.1398 58.96 77.4098 46.71 75.0398 44.44C74.9898 44.4 74.9498 44.35 74.8998 44.31C74.7898 44.21 74.7098 44.13 74.6698 44.1C69.3698 39.31 61.3598 38.32 60.6998 38.25C49.5498 37.02 39.1098 43.67 34.2598 52.82C28.7398 63.21 30.6198 76.47 39.0498 85.72C40.5198 74.78 50.9598 72.58 53.8298 74.06C56.5298 75.45 56.4498 82.62 53.7398 90.68C53.4998 91.25 53.2698 91.88 53.1098 92.34C53.1098 92.34 53.1098 92.34 53.1098 92.33C53.0998 92.37 53.0798 92.42 53.0698 92.46C53.0398 92.56 53.0098 92.64 52.9798 92.72C52.9498 92.82 52.9098 92.91 52.8798 93.01C52.8798 93.02 52.8798 93.03 52.8798 93.03C52.6398 93.76 52.4798 94.49 52.4898 95.14C51.0298 106.21 60.7098 118.68 73.1598 119.68C65.3798 112.99 64.7698 100.41 70.3598 91.4H70.3498Z" fill="white"/>
+<path d="M121.025 69.5709C121.392 68.6886 120.631 67.5335 119.325 66.9908C118.02 66.4482 116.664 66.7235 116.297 67.6057C115.931 68.488 116.692 69.6432 117.997 70.1858C119.303 70.7285 120.658 70.4531 121.025 69.5709Z" fill="#E73F19"/>
+<path d="M222.64 44.74H203.08V28.66C203.08 27.58 202.5 27 201.34 27H189.74C188.58 27 188 27.58 188 28.66V86.68C188 87.76 188.58 88.34 189.74 88.34H212.34V88.31C212.68 88.32 213.01 88.34 213.37 88.34H222.65C231.27 88.34 235 84.78 235 76.49V56.6C235 48.31 231.27 44.75 222.65 44.75L222.64 44.74ZM219.9 71.93C219.9 75.58 219.24 76.24 214.84 76.24H209.12C204.81 76.24 203.07 74.42 203.07 70.85V62.23C203.07 58.67 204.81 56.84 209.12 56.84H214.84C219.23 56.84 219.9 57.5 219.9 61.15V71.92V71.93Z" fill="#1D1D1B"/>
+<path d="M274.94 44.74H251.73C243.11 44.74 239.38 48.3 239.38 56.59V76.48C239.38 84.77 243.11 88.33 251.73 88.33H274.94C283.64 88.33 287.29 84.77 287.29 76.48V56.59C287.29 48.3 283.64 44.74 274.94 44.74ZM272.21 71.93C272.21 75.58 271.55 76.24 267.15 76.24H259.53C255.14 76.24 254.47 75.58 254.47 71.93V61.16C254.47 57.51 255.13 56.85 259.53 56.85H267.15C271.54 56.85 272.21 57.51 272.21 61.16V71.93Z" fill="#1D1D1B"/>
+<path d="M322.958 66.21L337.708 46.4C338.288 45.57 337.878 44.74 337.048 44.74H323.618C322.458 44.74 321.798 44.99 321.128 45.98L313.258 57.83L305.548 45.98C304.888 44.9 304.138 44.74 302.978 44.74H288.808C287.978 44.74 287.568 45.57 288.148 46.4L302.818 66.21L287.648 86.68C287.068 87.43 287.478 88.34 288.398 88.34H301.828C302.908 88.34 303.648 88.09 304.318 87.1L312.528 74.67L320.738 87.1C321.398 88.18 322.148 88.34 323.308 88.34H337.478C338.388 88.34 338.718 87.51 338.138 86.68L322.968 66.21H322.958Z" fill="#1D1D1B"/>
+<path d="M372.37 44.74H351.48C343.27 44.74 339.79 48.06 339.79 55.93V58.66C339.79 59.74 340.45 60.32 341.53 60.32H352.8C353.96 60.32 354.54 59.74 354.54 58.66V58.33C354.54 57.17 355.04 56.67 356.28 56.67H364.57C368.88 56.67 369.63 57.33 369.63 60.98V63.05H349.82C341.61 63.05 338.38 65.37 338.38 74.07V77.3C338.38 85.17 341.61 88.32 349.82 88.32H359.02C365.32 88.32 369.05 86 370.62 81.44C370.87 85.92 373.6 88.32 379.16 88.32H384.68V60.67C384.68 60.55 384.7 60.45 384.71 60.34C384.71 60.31 384.71 60.28 384.71 60.25V56.58C384.71 48.29 380.98 44.73 372.36 44.73L372.37 44.74ZM369.64 71.02C369.64 74.58 367.9 76.41 363.59 76.41H356.05C354.31 76.41 353.48 75.66 353.48 74.01V72.44C353.48 70.78 354.31 70.04 356.05 70.04H369.64V71.03V71.02Z" fill="#1D1D1B"/>
+<path d="M434.63 27.01H423.03C421.95 27.01 421.29 27.59 421.29 28.67V44.75H401.73C393.11 44.75 389.38 48.31 389.38 56.6V76.49C389.38 84.78 393.11 88.34 401.73 88.34H434.64C435.8 88.34 436.38 87.76 436.38 86.68V28.66C436.38 27.58 435.8 27 434.64 27L434.63 27.01ZM404.46 71.93V61.16C404.46 57.51 405.12 56.85 409.52 56.85H415.32C419.55 56.85 421.29 58.67 421.29 62.24V70.86C421.29 74.43 419.55 76.25 415.32 76.25H409.52C405.13 76.25 404.46 75.59 404.46 71.94V71.93Z" fill="#1D1D1B"/>
+<path d="M476.94 44.74H453.73C445.11 44.74 441.38 48.3 441.38 56.59V76.48C441.38 84.77 445.11 88.33 453.73 88.33H476.94C485.64 88.33 489.29 84.77 489.29 76.48V56.59C489.29 48.3 485.64 44.74 476.94 44.74ZM474.21 71.93C474.21 75.58 473.55 76.24 469.15 76.24H461.53C457.14 76.24 456.47 75.58 456.47 71.93V61.16C456.47 57.51 457.13 56.85 461.53 56.85H469.15C473.54 56.85 474.21 57.51 474.21 61.16V71.93Z" fill="#1D1D1B"/>
+</svg>
     </div>
   </div>
-  <button class="account-btn">Moje Konto ▾</button>
+  <div class="topbar-content">
+    <div class="page-title">Kontakt</div>
+    <div class="topbar-spacer"></div>
+    <div class="topbar-right">
+    <div class="badges-group">
+      <div class="integration-badge">
+        <span class="dot"></span>
+        <span class="label">Fakturownia:</span>
+        <span class="status">Aktywna</span>
+      </div>
+      <div class="integration-badge">
+        <span class="dot"></span>
+        <span class="status" style="color: var(--orange); font-weight: 600;">Przelewy24</span>
+        <span class="label">Aktywne</span>
+      </div>
+    </div>
+      <button class="account-btn">Moje Konto
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+          <path d="M2.5 4.5l3.5 3.5 3.5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
 </div>
 
 <div class="layout">
   <aside class="sidebar">
-    <div class="nav-section">
-      <div class="nav-label">Ogólne</div>
-      <div class="nav-item">▦ Pulpit</div>
-      <div class="nav-item">⚙ Ustawienia konta</div>
+    <div class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-label">Zarządzanie</div>
+        <div class="nav-item">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.4"/><rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.4"/><rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.4"/><rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.4"/></svg>
+          Pulpit
+        </div>
+        <div class="nav-item">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 13V7M7 13V4M11 13v-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          Raporty
+        </div>
+        <div class="nav-item">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2" y="3" width="12" height="10" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M2 6h12" stroke="currentColor" stroke-width="1.4"/></svg>
+          Cenniki
+        </div>
+        <div class="nav-item">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="11.5" cy="4.5" r="2" stroke="currentColor" stroke-width="1.4"/><path d="M10 6L4 12M5 9h2M9 11v2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          Promocje
+        </div>
+        <div class="nav-item">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 13V5l5-3 5 3v8" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><rect x="6" y="8" width="4" height="5" stroke="currentColor" stroke-width="1.4"/></svg>
+          Moja firma
+        </div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label">Obsługa</div>
+        <div class="nav-item">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2" y="3" width="12" height="11" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M2 6h12M5 2v2M11 2v2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          Rezerwacje
+        </div>
+        <div class="nav-item">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2" y="3" width="12" height="11" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M5 7l2 2 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Wynajęcia
+        </div>
+        <div class="nav-item">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="6" cy="6" r="2.5" stroke="currentColor" stroke-width="1.4"/><circle cx="11" cy="7" r="2" stroke="currentColor" stroke-width="1.4"/><path d="M2 13c0-2 1.8-3.5 4-3.5s4 1.5 4 3.5M9 13c0-1.5 1.4-2.5 3-2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          Klienci
+        </div>
+        <div class="nav-item">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2" y="3" width="12" height="11" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M5 7h6M5 10h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          Rozliczenia
+        </div>
+        <div class="nav-item">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"/><path d="M8 5v4M8 11v.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          Windykacja
+        </div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label">Place</div>
+        <div class="nav-item">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 14s5-4.5 5-8.5a5 5 0 0 0-10 0c0 4 5 8.5 5 8.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><circle cx="8" cy="5.5" r="1.5" stroke="currentColor" stroke-width="1.4"/></svg>
+          Place
+        </div>
+      <div class="place-chip">
+        <div class="place-chip-avatar">S</div>
+        <div class="place-chip-body">
+          <div class="place-chip-name">Portowa 62/22</div>
+          <div class="place-chip-city">Szczecin</div>
+        </div>
+      </div>
+      <div class="place-chip">
+        <div class="place-chip-avatar">J</div>
+        <div class="place-chip-body">
+          <div class="place-chip-name">Władysława Reymon…</div>
+          <div class="place-chip-city">Jastrzębie-Zdrój</div>
+        </div>
+      </div>
+      <div class="place-chip">
+        <div class="place-chip-avatar">L</div>
+        <div class="place-chip-body">
+          <div class="place-chip-name">Głęboka 12</div>
+          <div class="place-chip-city">Lublin</div>
+        </div>
+      </div>
+      <div class="place-chip">
+        <div class="place-chip-avatar">J</div>
+        <div class="place-chip-body">
+          <div class="place-chip-name">Władysława Reymon…</div>
+          <div class="place-chip-city">Jastrzębie-Zdrój</div>
+        </div>
+      </div>
+      <div class="place-chip">
+        <div class="place-chip-avatar">J</div>
+        <div class="place-chip-body">
+          <div class="place-chip-name">Dworcowa 2</div>
+          <div class="place-chip-city">Jastrzębie-Zdrój</div>
+        </div>
+      </div>
+      </div>
     </div>
-    <div class="nav-section">
-      <div class="nav-label">Najmy</div>
-      <div class="nav-item">▣ Aktywne najmy</div>
-      <div class="nav-item">▣ Historia najmów</div>
-      <div class="nav-item">▣ Przyszłe najmy</div>
-    </div>
-    <div class="nav-section">
-      <div class="nav-label">Rozliczenia</div>
-      <div class="nav-item">⌖ Zaległości</div>
-    </div>
-    <div class="nav-section">
-      <div class="nav-label">Pomoc</div>
-      <div class="nav-item active">🎧 Kontakt</div>
+    <div class="sidebar-footer">
+      <button class="sidebar-footer-btn" aria-label="Pomoc">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.4"/>
+          <path d="M6 6c0-1.1 0.9-2 2-2s2 0.9 2 2c0 1-0.5 1.3-1 1.6-0.5 0.3-1 0.6-1 1.4M8 11.5v0.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <button class="sidebar-footer-btn" aria-label="Zwiń sidebar">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <rect x="2" y="3" width="12" height="10" rx="1.5" stroke="currentColor" stroke-width="1.4"/>
+          <path d="M6 3v10" stroke="currentColor" stroke-width="1.4"/>
+        </svg>
+      </button>
     </div>
   </aside>
 
@@ -565,6 +859,9 @@
             <option value="inne">Inne</option>
           </select>
         </div>
+
+        <!-- Category disclaimer (per-category, shown right under category select) -->
+        <div id="categoryDisclaimer" class="category-disclaimer" style="display:none;"></div>
 
         <!-- Fields below appear after category is selected -->
         <div id="restOfForm" class="rest-of-form">
@@ -772,6 +1069,7 @@
     },
     dane: {
       show: { urgency: false, attachment: true, phone: false, diagnostic: false },
+      disclaimer: "Nie jest możliwa zmiana danych skutkująca zmianą strony umowy.",
       title: null,
       desc: {
         label: "Napisz jakie działania mamy podjąć",
@@ -863,7 +1161,24 @@
       rest.classList.remove('visible');
       actions.style.display = 'none';
       notice.style.display = 'none';
+      document.getElementById('categoryDisclaimer').style.display = 'none';
       return;
+    }
+
+    // Category-specific disclaimer (right under category select)
+    const disclaimerEl = document.getElementById('categoryDisclaimer');
+    if (cfg.disclaimer) {
+      disclaimerEl.innerHTML = `
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.4"/>
+          <circle cx="8" cy="4.5" r="0.9" fill="currentColor"/>
+          <path d="M8 7v5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+        <span>${cfg.disclaimer}</span>
+      `;
+      disclaimerEl.style.display = 'flex';
+    } else {
+      disclaimerEl.style.display = 'none';
     }
 
     // Title field
