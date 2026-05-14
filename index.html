@@ -441,6 +441,73 @@
   .file-drop-text { font-size: 13.5px; color: var(--text-muted); }
   .file-drop-text strong { color: var(--orange); }
 
+  /* File preview (after file selected) */
+  .file-preview {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: white;
+  }
+  .file-preview-thumb {
+    width: 48px;
+    height: 48px;
+    border-radius: 4px;
+    object-fit: cover;
+    flex-shrink: 0;
+    background: var(--bg);
+    border: 1px solid var(--border);
+  }
+  .file-preview-thumb-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+  }
+  .file-preview-info { flex: 1; min-width: 0; }
+  .file-preview-name {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .file-preview-size {
+    font-size: 12px;
+    color: var(--text-subtle);
+    margin-top: 2px;
+  }
+  .file-preview-remove {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: white;
+    color: var(--text-muted);
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    line-height: 1;
+    transition: all 0.15s;
+  }
+  .file-preview-remove:hover {
+    background: #FEE2E2;
+    border-color: #FCA5A5;
+    color: #DC2626;
+  }
+
   /* Checkbox */
   .check-row {
     display: flex;
@@ -896,14 +963,27 @@
         <!-- Attachment -->
         <div class="field" id="attachmentField">
           <label>Załącznik</label>
-          <div class="file-drop" onclick="document.getElementById('file').click()">
-            <div class="file-drop-icon">📎</div>
-            <div class="file-drop-text">
-              <strong>Dodaj zrzut ekranu</strong> lub przeciągnij plik tutaj
+          <label for="file" style="display:block; cursor:pointer;">
+            <div class="file-drop" id="fileDrop"
+                 ondragover="event.preventDefault(); this.style.borderColor='var(--orange)'"
+                 ondragleave="this.style.borderColor=''"
+                 ondrop="handleFileDrop(event)">
+              <div class="file-drop-icon">📎</div>
+              <div class="file-drop-text">
+                <strong>Dodaj zrzut ekranu</strong> lub przeciągnij plik tutaj
+              </div>
+              <div class="hint">Akceptujemy tylko .jpg, .png i .heic, maks. rozmiar 5 MB</div>
             </div>
-            <div class="hint">Akceptujemy tylko .jpg, .png i .heic, maks. rozmiar 5 MB</div>
+          </label>
+          <div class="file-preview" id="filePreview" style="display:none;">
+            <img class="file-preview-thumb" id="fileThumb" src="" alt="">
+            <div class="file-preview-info">
+              <div class="file-preview-name" id="fileName"></div>
+              <div class="file-preview-size" id="fileSize"></div>
+            </div>
+            <button type="button" class="file-preview-remove" onclick="removeFile()" aria-label="Usuń plik">×</button>
           </div>
-          <input type="file" id="file" hidden accept=".jpg,.jpeg,.png,.heic">
+          <input type="file" id="file" style="display:none;" accept=".jpg,.jpeg,.png,.heic" onchange="handleFileSelect(this)">
         </div>
 
         <!-- Urgency -->
@@ -1248,6 +1328,46 @@
   function togglePhone() {
     const cb = document.getElementById('phoneConsent');
     document.getElementById('phoneWrap').style.display = cb.checked ? 'block' : 'none';
+  }
+
+  function handleFileSelect(input) {
+    if (input.files && input.files[0]) showFile(input.files[0]);
+  }
+
+  function handleFileDrop(e) {
+    e.preventDefault();
+    document.getElementById('fileDrop').style.borderColor = '';
+    const file = e.dataTransfer.files[0];
+    if (file) showFile(file);
+  }
+
+  function showFile(file) {
+    const allowed = ['image/jpeg', 'image/png', 'image/heic', 'image/heif'];
+    const maxSize = 5 * 1024 * 1024;
+    if (!allowed.includes(file.type) && !file.name.match(/\.(heic|heif)$/i)) {
+      alert('Akceptujemy tylko pliki .jpg, .png i .heic.');
+      return;
+    }
+    if (file.size > maxSize) {
+      alert('Plik jest za duży. Maksymalny rozmiar to 5 MB.');
+      return;
+    }
+    document.getElementById('fileName').textContent = file.name;
+    document.getElementById('fileSize').textContent = (file.size / 1024).toFixed(0) + ' KB';
+    document.getElementById('fileDrop').style.display = 'none';
+    document.getElementById('filePreview').style.display = 'flex';
+    if (file.type.startsWith('image/') && !file.type.includes('heic')) {
+      const reader = new FileReader();
+      reader.onload = e => { document.getElementById('fileThumb').src = e.target.result; };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  function removeFile() {
+    document.getElementById('file').value = '';
+    document.getElementById('fileThumb').src = '';
+    document.getElementById('filePreview').style.display = 'none';
+    document.getElementById('fileDrop').style.display = '';
   }
 
   function updateCount() {
