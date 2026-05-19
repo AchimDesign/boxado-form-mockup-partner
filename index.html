@@ -420,93 +420,79 @@
     gap: 8px;
   }
   /* File upload */
+  /* File upload zone */
   .file-drop {
     border: 1.5px dashed var(--border-strong);
     border-radius: var(--radius-sm);
-    padding: 20px;
+    padding: 28px 20px;
     text-align: center;
     background: white;
     cursor: pointer;
     transition: all 0.15s;
   }
-  .file-drop:hover {
+  .file-drop:hover, .file-drop.drag-over {
     border-color: var(--orange);
     background: var(--orange-soft);
+    color: var(--orange);
   }
-  .file-drop-icon {
-    font-size: 22px;
-    margin-bottom: 6px;
-    opacity: 0.5;
-  }
-  .file-drop-text { font-size: 13.5px; color: var(--text-muted); }
-  .file-drop-text strong { color: var(--orange); }
-
-  /* File preview (after file selected) */
-  .file-preview {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 12px;
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm);
-    background: white;
-  }
-  .file-preview-thumb {
-    width: 48px;
-    height: 48px;
-    border-radius: 4px;
-    object-fit: cover;
-    flex-shrink: 0;
-    background: var(--bg);
-    border: 1px solid var(--border);
-  }
-  .file-preview-thumb-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 4px;
-    flex-shrink: 0;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-  }
-  .file-preview-info { flex: 1; min-width: 0; }
-  .file-preview-name {
+  .file-drop:hover .file-drop-icon svg,
+  .file-drop.drag-over .file-drop-icon svg { stroke: var(--orange); }
+  .file-drop:hover .file-drop-text,
+  .file-drop.drag-over .file-drop-text { color: var(--orange); }
+  .file-drop:hover .file-drop-hint,
+  .file-drop.drag-over .file-drop-hint { color: var(--orange); opacity: .7; }
+  .file-drop-icon { margin-bottom: 10px; }
+  .file-drop-icon svg { stroke: var(--text-muted); transition: stroke 0.15s; }
+  .file-drop-text {
     font-size: 13.5px;
-    font-weight: 500;
-    color: var(--text);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .file-preview-size {
-    font-size: 12px;
-    color: var(--text-subtle);
-    margin-top: 2px;
-  }
-  .file-preview-remove {
-    flex-shrink: 0;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    border: 1px solid var(--border);
-    background: white;
     color: var(--text-muted);
-    font-size: 16px;
+    transition: color 0.15s;
+    margin-bottom: 4px;
+  }
+  .file-drop-text a { color: var(--orange); font-weight: 600; text-decoration: underline; }
+  .file-drop-hint { font-size: 12px; color: var(--text-subtle); transition: color 0.15s; }
+
+  /* Photo slots row */
+  .photo-slots {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .photo-slot {
+    aspect-ratio: 1;
+    border-radius: 6px;
+    border: 1.5px dashed var(--border-strong);
+    background: #FAFAFA;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .photo-slot.filled { border-style: solid; border-color: var(--border); background: white; }
+  .photo-slot img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .photo-slot .slot-remove {
+    position: absolute;
+    top: 4px; right: 4px;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.9);
+    border: 1px solid var(--border);
+    font-size: 14px;
     line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    color: var(--text-muted);
     transition: all 0.15s;
+    padding: 0;
   }
-  .file-preview-remove:hover {
-    background: #FEE2E2;
-    border-color: #FCA5A5;
-    color: #DC2626;
-  }
+  .photo-slot .slot-remove:hover { background: #FEE2E2; color: #DC2626; border-color: #FCA5A5; }
+  .photo-slot svg { stroke: #CBCBCB; }
 
   /* Checkbox */
   .check-row {
@@ -965,25 +951,28 @@
           <label>Załącznik</label>
           <label for="file" style="display:block; cursor:pointer;">
             <div class="file-drop" id="fileDrop"
-                 ondragover="event.preventDefault(); this.style.borderColor='var(--orange)'"
-                 ondragleave="this.style.borderColor=''"
+                 ondragover="event.preventDefault(); this.classList.add('drag-over')"
+                 ondragleave="this.classList.remove('drag-over')"
                  ondrop="handleFileDrop(event)">
-              <div class="file-drop-icon">📎</div>
-              <div class="file-drop-text">
-                <strong>Dodaj zrzut ekranu</strong> lub przeciągnij plik tutaj
+              <div class="file-drop-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                  <circle cx="12" cy="13" r="4"/>
+                </svg>
               </div>
-              <div class="hint">Akceptujemy tylko .jpg, .png i .heic, maks. rozmiar 5 MB</div>
+              <div class="file-drop-text">Kliknij, aby wybrać obraz <a onclick="event.preventDefault()">przeglądaj pliki</a></div>
+              <div class="file-drop-hint">Akceptujemy tylko .jpg, .png i .heic, maks. rozmiar 5MB</div>
             </div>
           </label>
-          <div class="file-preview" id="filePreview" style="display:none;">
-            <img class="file-preview-thumb" id="fileThumb" src="" alt="">
-            <div class="file-preview-info">
-              <div class="file-preview-name" id="fileName"></div>
-              <div class="file-preview-size" id="fileSize"></div>
-            </div>
-            <button type="button" class="file-preview-remove" onclick="removeFile()" aria-label="Usuń plik">×</button>
+          <div class="photo-slots" id="photoSlots" style="display:none;">
+            <div class="photo-slot" id="slot0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
+            <div class="photo-slot" id="slot1"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
+            <div class="photo-slot" id="slot2"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
+            <div class="photo-slot" id="slot3"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
+            <div class="photo-slot" id="slot4"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
+            <div class="photo-slot" id="slot5"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
           </div>
-          <input type="file" id="file" style="display:none;" accept=".jpg,.jpeg,.png,.heic" onchange="handleFileSelect(this)">
+          <input type="file" id="file" style="display:none;" accept=".jpg,.jpeg,.png,.heic" multiple onchange="handleFileSelect(this)">
         </div>
 
         <!-- Urgency -->
@@ -1330,44 +1319,65 @@
     document.getElementById('phoneWrap').style.display = cb.checked ? 'block' : 'none';
   }
 
+  const MAX_PHOTOS = 6;
+  let photos = []; // { dataUrl, name }
+
   function handleFileSelect(input) {
-    if (input.files && input.files[0]) showFile(input.files[0]);
+    const files = Array.from(input.files || []);
+    files.forEach(f => addPhoto(f));
+    input.value = '';
   }
 
   function handleFileDrop(e) {
     e.preventDefault();
-    document.getElementById('fileDrop').style.borderColor = '';
-    const file = e.dataTransfer.files[0];
-    if (file) showFile(file);
+    document.getElementById('fileDrop').classList.remove('drag-over');
+    Array.from(e.dataTransfer.files).forEach(f => addPhoto(f));
   }
 
-  function showFile(file) {
+  function addPhoto(file) {
+    if (photos.length >= MAX_PHOTOS) return;
     const allowed = ['image/jpeg', 'image/png', 'image/heic', 'image/heif'];
-    const maxSize = 5 * 1024 * 1024;
     if (!allowed.includes(file.type) && !file.name.match(/\.(heic|heif)$/i)) {
       alert('Akceptujemy tylko pliki .jpg, .png i .heic.');
       return;
     }
-    if (file.size > maxSize) {
+    if (file.size > 5 * 1024 * 1024) {
       alert('Plik jest za duży. Maksymalny rozmiar to 5 MB.');
       return;
     }
-    document.getElementById('fileName').textContent = file.name;
-    document.getElementById('fileSize').textContent = (file.size / 1024).toFixed(0) + ' KB';
-    document.getElementById('fileDrop').style.display = 'none';
-    document.getElementById('filePreview').style.display = 'flex';
-    if (file.type.startsWith('image/') && !file.type.includes('heic')) {
-      const reader = new FileReader();
-      reader.onload = e => { document.getElementById('fileThumb').src = e.target.result; };
-      reader.readAsDataURL(file);
-    }
+    const reader = new FileReader();
+    reader.onload = e => {
+      photos.push({ dataUrl: e.target.result, name: file.name });
+      renderSlots();
+    };
+    reader.readAsDataURL(file);
   }
 
-  function removeFile() {
-    document.getElementById('file').value = '';
-    document.getElementById('fileThumb').src = '';
-    document.getElementById('filePreview').style.display = 'none';
-    document.getElementById('fileDrop').style.display = '';
+  function removePhoto(idx) {
+    photos.splice(idx, 1);
+    renderSlots();
+  }
+
+  function renderSlots() {
+    const slotsWrap = document.getElementById('photoSlots');
+    if (photos.length === 0) {
+      slotsWrap.style.display = 'none';
+      return;
+    }
+    slotsWrap.style.display = 'grid';
+    for (let i = 0; i < MAX_PHOTOS; i++) {
+      const slot = document.getElementById('slot' + i);
+      if (photos[i]) {
+        slot.classList.add('filled');
+        slot.innerHTML = `
+          <img src="${photos[i].dataUrl}" alt="${photos[i].name}">
+          <button type="button" class="slot-remove" onclick="removePhoto(${i})" aria-label="Usuń zdjęcie">×</button>
+        `;
+      } else {
+        slot.classList.remove('filled');
+        slot.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>`;
+      }
+    }
   }
 
   function updateCount() {
